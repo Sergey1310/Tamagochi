@@ -116,14 +116,18 @@ private:
 int main() {
     Tamagochi pet;
     pet.getName();
-    bool startAnswer = false;
+    std::string startAnswer;
+    while (true){
     std::cout << "Do you want set the starting values?  Yes\\No " << std::endl;
     std::cout << "Enter your answer: ";
     std::cin >> startAnswer;
     std::cout << std::endl;
-    if (startAnswer){
+    if ((startAnswer == "Yes")||(startAnswer == "yes")||(startAnswer == "y")){
         pet.setSatiety();
         pet.setPlayfulness();
+        break;
+    } else if ((startAnswer == "No")||(startAnswer == "no")||(startAnswer == "n")){break;}
+    else {std::cout << "Your answer is incorrect, try again!" << std::endl;}
     }
     pet.showInfo();
     int choose = 1;
