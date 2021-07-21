@@ -16,90 +16,99 @@
 class Tamagochi{
 
 public:
-    void getName(){
+    void GetName(){
         std::cout << "Give a name to your pet: ";
         std::cin >> name;
         std::cout << std::endl;
     }; // Присваиваем имя нашему питомцу.
-    void setSatiety(){
+
+    void SetSatiety(){
         std::cout << "Now enter starting value satiety for your pet (0 - 100): ";
         std::cin >> satiety;
         std::cout << std::endl;
-        limits(); // Возвращаем значение к 0 - 100.
+        Limits(); // Возвращаем значение к 0 - 100.
     }; // Задаём сытость питомца.
-    void setPlayfulness(){
+
+    void SetPlayfulness(){
         std::cout << "Now enter starting value playfulness for your pet (0-100): ";
         std::cin >> playfulness;
         std::cout << std::endl;
-        limits(); // Возвращаем значение к 0 - 100.
+        Limits(); // Возвращаем значение к 0 - 100.
     }; // Задаём игривость питомца.
-    void showInfo(){
+
+    void ShowInfo(){
         std::cout << "The pet: " << name << std::endl;
         std::cout << "Satiety: " << satiety << "\tPlayfulness: " << playfulness <<std::endl;
     }; // Показывает имя питомца, его текущую сытость и игривость.
-    void stroke(){
+
+    void Stroke(){
         playfulness +=5;
-        limits(); // Возвращаем значение к 0 - 100.
-        success(); // Оповещаем пользователя об успешном завершении операции.
-        showInfo(); // Выводим информацию о питомце
+        Limits(); // Возвращаем значение к 0 - 100.
+        Success(); // Оповещаем пользователя об успешном завершении операции.
+        ShowInfo(); // Выводим информацию о питомце
     }; // Погладить (+5 к игривости).
-    void play(){
+
+    void Play(){
         checkSatiety = satiety; // Присваиваем текущее значение сытости в дополнительную переменную.
         checkSatiety -= 10; // Вычитаем из временной переменной заданное значение.
         if (checkSatiety < 0){ // Проверяем дополнительную переменную на отрицательное значение.
-            check(); // Если значение отрицательное, выводим информацию, чего нехватает питомцу.
-            showInfo(); // Выводим информацию о текущем состоянии питомца.
+            Check(); // Если значение отрицательное, выводим информацию, чего нехватает питомцу.
+            ShowInfo(); // Выводим информацию о текущем состоянии питомца.
             return; // Завершаем действие без внесения изменений.
         } else{ // Если значение не отрицательное.
             satiety = checkSatiety; // Присваиваем основной переменной сытости значение дополнительной.
             playfulness += 10; //Увеличиваем сытость на заданное значение.
-            success();// Оповещаем пользователя об успешном завершении операции.
-            limits(); // Возвращаем значение к 0 - 100.
-            showInfo();// Выводим информацию о питомце
+            Success();// Оповещаем пользователя об успешном завершении операции.
+            Limits(); // Возвращаем значение к 0 - 100.
+            ShowInfo();// Выводим информацию о питомце
             return;
         }
 
     }; // Поиграть (+10 к игривости, -10 к сыточти).
-    void feed(){
+
+    void Feed(){
         satiety += 20;
-        limits();
-        success();
-        showInfo();
+        Limits();
+        Success();
+        ShowInfo();
     }; // Покормить (+20 к сытости).
-    void sleep(){
+
+    void Sleep(){
         checkPlayfulness = playfulness; // Присваиваем текущее значение игривости в дополнительную переменную.
         checkSatiety = satiety; // Присваиваем текущее значение сытости в дополнительную переменную.
         checkPlayfulness -= 20; // Уменьшаем значение игривости в доп. перменной.
         checkSatiety -= 10; // Уменьшаем значение сытости в доп переменной.
         if (checkSatiety < 0)
         {
-            check();
+            Check();
             return;
         } else if (checkPlayfulness < 0){ // Проверка на отрицательные значения.
-            check(); // Вывод причины отмены действия.
-            showInfo();
+            Check(); // Вывод причины отмены действия.
+            ShowInfo();
             return;
         }else{ // Значение не отрицательное, операция выполняется.
             satiety = checkSatiety;
             playfulness = checkPlayfulness;
-            success();
-            limits();
-            showInfo();
+            Success();
+            Limits();
+            ShowInfo();
             return;
         }
     }; // Отправить спать (-10 к сытости, -20 к игривости).
-    void say(){
+
+    void Say(){
         std::string say;
         std::cout << "Enter what " << name << " have to say: ";
         std::cin >> say;
         std::cout << std::endl << name << " say: " << say << std::endl;
-        success();
-        showInfo();
+        Success();
+        ShowInfo();
     }; // Подать голос
 
 
 private:
-    void check(){
+
+    void Check(){
         if ((checkSatiety<0)&&(checkPlayfulness<0)){ // Проверка доп переменных на отрицательное значение.
             std::cout << name << " say: I can not do it, I need to eat and play!" << std::endl << std::endl; // Питомец голодный и злой! Не так просто его довести, но всё же..
             checkSatiety = 1; // Присваиваем дополнительной переменной не нулевое значение.
@@ -112,45 +121,53 @@ private:
             checkPlayfulness = 1;
         }
     }; // Проверка параметров сытости и игривости питомца к возможности выполнения действий.
-    void limits(){
+
+    void Limits(){
         if(satiety>100) satiety = 100;
         if(playfulness>100) playfulness = 100;
         if(satiety<0) satiety = 0;
         if(playfulness<0) playfulness = 0;
     }; // Возврат значений в диапозон от 0 до 100.
-    void success(){
+
+    void Success(){
         std::cout << std::endl << name << " say: I have done it! " << std::endl << std::endl;
     }; // Сообщение об успешно выполненой операции.
+
     std::string name; // Хранит имя питомца.
     int satiety = 100; // Сытость.
     int playfulness = 100; // Игривость.
-    int checkSatiety = 0; // Дополнительная переменная для сытости.
-    int checkPlayfulness = 0; // Дополнительная переменная для игривости.
+    int
 
 };
 
 
 int main() {
     Tamagochi pet; // Заводим нового питомца.
-    pet.getName(); // Даём Имя.
+
+    pet.GetName(); // Даём Имя.
+
     std::string startAnswer; // Переменная для принятия ответа о ручном задании сытости и игривости.
+
     while (true){
-    std::cout << "Do you want set the starting values?  Yes\\No " << std::endl;
-    std::cout << "Enter your answer: ";
-    std::cin >> startAnswer;
-    std::cout << std::endl;
-    if ((startAnswer == "Yes")||(startAnswer == "yes")||(startAnswer == "y")){
-        pet.setSatiety();
-        pet.setPlayfulness();
-        break;
-    } else if ((startAnswer == "No")||(startAnswer == "no")||(startAnswer == "n")){break;}
-    else {std::cout << "Your answer is incorrect, try again!" << std::endl;}
+        std::cout << "Do you want set the starting values?  Yes\\No " << std::endl;
+        std::cout << "Enter your answer: ";
+        std::cin >> startAnswer;
+        std::cout << std::endl;
+        if ((startAnswer == "Yes")){
+            pet.SetSatiety();
+            pet.SetPlayfulness();
+            break;
+        } else if ((startAnswer == "No")||(startAnswer == "no")||(startAnswer == "n")){
+            break;}
+            else {std::cout << "Your answer is incorrect, try again!" << std::endl;}
     } // Цикл запрашивающий- желает ли пользователь ввести значения сытости и игривости
     // Если ответ положительный - пользователь вводит эти значения.
     // Если ответ отрицательный - применяется максимальное значение.
     // Если ответ не корректный - повтор.
-    pet.showInfo(); // Вывод информации о питомце.
+    pet.ShowInfo(); // Вывод информации о питомце.
+
     int choose = 1; // Переменная - выбора вариантов действий и выхода из цикла.
+
     while (choose){
         std::cout << "MENU" << std::endl;
         std::cout << "You can: " << std::endl;
@@ -165,19 +182,21 @@ int main() {
         std::cout << std::endl;
         switch (choose) {
             case 1:
-                pet.stroke();
+                pet.Stroke();
                 break;
             case 2:
-                pet.play();
+                pet.Play();
                 break;
             case 3:
-                pet.feed();
+                pet.Feed();
                 break;
             case 4:
-                pet.sleep();
+                pet.Sleep();
                 break;
             case 5:
-                pet.say();
+                pet.Say();
+                break;
+            case 0:
                 break;
             default:
                 std::cout << "You choose incorrect value. Try again! " << std::endl;
