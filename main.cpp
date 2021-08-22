@@ -13,138 +13,195 @@
  */
 #include <iostream>
 #include <string>
+
+enum Actions
+        {
+    Exit,
+    Pet,
+    Play,
+    Feed,
+    Sleep,
+    Say,
+        };
+
+
+
 class Tamagochi{
 
 public:
-    void GetName(){
-        std::cout << "Give a name to your pet: ";
-        std::cin >> name;
-        std::cout << std::endl;
-    }; // Присваиваем имя нашему питомцу.
+    // Конструктор по умолчанию устонавливает сытость и игривость на 100.
+    Tamagochi()
+    {
+        satiety = 100;
+        playfulness = 100;
+    }
+    // Диструктор, в данном классе нет обращений к внешней памяти, поэтому очищать нечего.
+    ~Tamagochi(){};
 
-    void SetSatiety(){
-        std::cout << "Now enter starting value satiety for your pet (0 - 100): ";
-        std::cin >> satiety;
-        std::cout << std::endl;
-        Limits(); // Возвращаем значение к 0 - 100.
-    }; // Задаём сытость питомца.
-
-    void SetPlayfulness(){
-        std::cout << "Now enter starting value playfulness for your pet (0-100): ";
-        std::cin >> playfulness;
-        std::cout << std::endl;
-        Limits(); // Возвращаем значение к 0 - 100.
-    }; // Задаём игривость питомца.
-
-    void ShowInfo(){
-        std::cout << "The pet: " << name << std::endl;
-        std::cout << "Satiety: " << satiety << "\tPlayfulness: " << playfulness <<std::endl;
-    }; // Показывает имя питомца, его текущую сытость и игривость.
-
-    void Stroke(){
-        playfulness +=5;
-        Limits(); // Возвращаем значение к 0 - 100.
-        Success(); // Оповещаем пользователя об успешном завершении операции.
-        ShowInfo(); // Выводим информацию о питомце
-    }; // Погладить (+5 к игривости).
-
-    void Play(){
-        checkSatiety = satiety; // Присваиваем текущее значение сытости в дополнительную переменную.
-        checkSatiety -= 10; // Вычитаем из временной переменной заданное значение.
-        if (checkSatiety < 0){ // Проверяем дополнительную переменную на отрицательное значение.
-            Check(); // Если значение отрицательное, выводим информацию, чего нехватает питомцу.
-            ShowInfo(); // Выводим информацию о текущем состоянии питомца.
-            return; // Завершаем действие без внесения изменений.
-        } else{ // Если значение не отрицательное.
-            satiety = checkSatiety; // Присваиваем основной переменной сытости значение дополнительной.
-            playfulness += 10; //Увеличиваем сытость на заданное значение.
-            Success();// Оповещаем пользователя об успешном завершении операции.
-            Limits(); // Возвращаем значение к 0 - 100.
-            ShowInfo();// Выводим информацию о питомце
-            return;
-        }
-
-    }; // Поиграть (+10 к игривости, -10 к сыточти).
-
-    void Feed(){
-        satiety += 20;
-        Limits();
-        Success();
-        ShowInfo();
-    }; // Покормить (+20 к сытости).
-
-    void Sleep(){
-        checkPlayfulness = playfulness; // Присваиваем текущее значение игривости в дополнительную переменную.
-        checkSatiety = satiety; // Присваиваем текущее значение сытости в дополнительную переменную.
-        checkPlayfulness -= 20; // Уменьшаем значение игривости в доп. перменной.
-        checkSatiety -= 10; // Уменьшаем значение сытости в доп переменной.
-        if (checkSatiety < 0)
-        {
-            Check();
-            return;
-        } else if (checkPlayfulness < 0){ // Проверка на отрицательные значения.
-            Check(); // Вывод причины отмены действия.
-            ShowInfo();
-            return;
-        }else{ // Значение не отрицательное, операция выполняется.
-            satiety = checkSatiety;
-            playfulness = checkPlayfulness;
-            Success();
-            Limits();
-            ShowInfo();
-            return;
-        }
-    }; // Отправить спать (-10 к сытости, -20 к игривости).
-
-    void Say(){
-        std::string say;
-        std::cout << "Enter what " << name << " have to say: ";
-        std::cin >> say;
-        std::cout << std::endl << name << " say: " << say << std::endl;
-        Success();
-        ShowInfo();
-    }; // Подать голос
-
+    void SetName();// Присваиваем имя нашему питомцу.
+    void SetSatiety(); // Задаём сытость питомца.
+    void SetPlayfulness(); // Задаём игривость питомца.
+    void ShowInfo(); // Показывает имя питомца, его текущую сытость и игривость.
+    void Pet(); // Погладить (+5 к игривости).
+    void Play(); // Поиграть (+10 к игривости, -10 к сыточти).
+    void Feed(); // Покормить (+20 к сытости).
+    void Sleep(); // Отправить спать (-10 к сытости, -20 к игривости).
+    void Say(); // Подать голос
 
 private:
-
-    void Check(){
-        if ((checkSatiety<0)&&(checkPlayfulness<0)){ // Проверка доп переменных на отрицательное значение.
-            std::cout << name << " say: I can not do it, I need to eat and play!" << std::endl << std::endl; // Питомец голодный и злой! Не так просто его довести, но всё же..
-            checkSatiety = 1; // Присваиваем дополнительной переменной не нулевое значение.
-            checkPlayfulness = 1;// Чтобы при вызове проверки с одним аргументом, не применялся вывод для двух.
-        } else if ((checkSatiety<0)){ // Проверка доп переменных на отрицательное значение.
-            std::cout << name << " say: I can not do it, I need to eat!" << std::endl << std::endl; // Питомец голодный.
-            checkSatiety = 1;
-        } else if (checkPlayfulness<0){ // Проверка доп переменных на отрицательное значение
-            std::cout << name << " say: I can not do it, I need to play!" << std::endl << std::endl; // Питомец грустный.
-            checkPlayfulness = 1;
-        }
-    }; // Проверка параметров сытости и игривости питомца к возможности выполнения действий.
-
-    void Limits(){
-        if(satiety>100) satiety = 100;
-        if(playfulness>100) playfulness = 100;
-        if(satiety<0) satiety = 0;
-        if(playfulness<0) playfulness = 0;
-    }; // Возврат значений в диапозон от 0 до 100.
-
-    void Success(){
-        std::cout << std::endl << name << " say: I have done it! " << std::endl << std::endl;
-    }; // Сообщение об успешно выполненой операции.
-
+    //Pet
+    const int ADD_PLAYFILNESS_FOR_PET = 5;
+    //Play
+    const int ADD_PLAYFILNESS_FOR_PLAY = 10;
+    const int SUB_SATIETY_FOR_PLAY = -10;
+    //Feed
+    const int ADD_SATIETY_FOR_FEED = 20;
+    //Sleep
+    const int SUB_SATIETY_FOR_SLEEP = -10;
+    const int SUB_PLAYFILNESS_FOR_SLEEP = -20;
+    //Say
+    const std::string answer = "Miau";
+    //Name
     std::string name; // Хранит имя питомца.
-    int satiety = 100; // Сытость.
-    int playfulness = 100; // Игривость.
-    int
+    //Parameters
+    int playfulness;
+    int satiety;
+    //Max Parameters
+    const int MAX_PLAYFULNESS = 100;
+    const int MAX_SATIETY = 100;
 
+    bool CheckMax(const int PARAMETR, const int MAX);
+    bool Check(const int PARAMETER,const int SUB); // Функция берёт параметр состояния Сытости или Игривости а также
+    // Вычитаемое из неё значение, и производит проверку на то чтобы значение параметра не опустилось ниже 0.
+    void MessageNotEnoughPlayfilness(); // Сообщение о недостатке Игривости.
+    void MessageNotEnoughSatiety(); // Сообщение о недостатке Сытости.
+    void MessageSuccess(); // Сообщение об успехе выполнения действия.
+
+};
+
+void Tamagochi::SetName(){
+    std::cout << "Give a name to your pet: ";
+    std::cin >> name;
+    std::cout << std::endl;
+};
+
+void Tamagochi::SetSatiety(){
+    while (true)
+    {
+        std::cout << "Now enter starting value satiety for your pet (0 - 100): ";
+        std::cin >> satiety;
+        if (CheckMax(satiety,MAX_SATIETY))
+        {
+            std::cout << std::endl;
+            break;
+        } else
+        {
+            std::cout << "----------------------------------------------" << std::endl;
+            std::cout << "Your value is not correct" << std::endl;
+        }
+    }
+};
+
+void Tamagochi::SetPlayfulness(){
+    while (true)
+    {
+
+        std::cout << "Now enter starting value playfulness for your pet (0-100): ";
+        std::cin >> playfulness;
+        if (CheckMax(playfulness,MAX_PLAYFULNESS))
+        {
+            std::cout << std::endl;
+            break;
+        } else
+        {
+            std::cout << "------------------------------------------------" << std::endl;
+            std::cout << "Your value is not correct" << std::endl;
+        }
+    }
+};
+
+void Tamagochi::ShowInfo(){
+    std::cout << "The pet: " << name << std::endl;
+    std::cout << "Satiety: " << satiety << "\tPlayfulness: " << playfulness <<std::endl;
+};
+
+void Tamagochi::Pet(){
+    playfulness += ADD_PLAYFILNESS_FOR_PET;
+    if (!CheckMax(playfulness,MAX_PLAYFULNESS))
+    {
+        playfulness = MAX_PLAYFULNESS;
+    }
+    MessageSuccess();
+};
+
+void Tamagochi::Play(){
+    if (Check(satiety,SUB_SATIETY_FOR_PLAY))
+    {
+        playfulness += ADD_PLAYFILNESS_FOR_PLAY;
+        satiety += SUB_SATIETY_FOR_PLAY;
+        if (!CheckMax(playfulness,MAX_PLAYFULNESS))
+        {
+            playfulness = MAX_PLAYFULNESS;
+        }
+        MessageSuccess();
+    } else MessageNotEnoughSatiety();
+};
+
+void Tamagochi::Feed(){
+    satiety += ADD_SATIETY_FOR_FEED;
+    if (!CheckMax(satiety,MAX_SATIETY))
+    {
+        satiety = MAX_SATIETY;
+    }
+    MessageSuccess();
+};
+
+void Tamagochi::Sleep(){
+    if (Check(playfulness,SUB_PLAYFILNESS_FOR_SLEEP))
+    {
+        if (Check(satiety,SUB_SATIETY_FOR_SLEEP))
+        {
+            playfulness += SUB_PLAYFILNESS_FOR_SLEEP;
+            satiety += SUB_SATIETY_FOR_SLEEP;
+            MessageSuccess();
+        } else MessageNotEnoughSatiety();
+    } else MessageNotEnoughPlayfilness();
+};
+
+void Tamagochi::Say(){
+    std::cout << name << " say:\t" << answer << std::endl;
+};
+
+bool Tamagochi::Check(const int PARAMETER,const int SUB) {
+    int tempParameter = PARAMETER;
+    return (tempParameter + SUB) >= 0 ? true : false;
+};
+
+bool Tamagochi::CheckMax(const int PARAMETR, const int MAX ){
+    int temp = PARAMETR;
+    return (temp <= MAX) ? true : false;
+};
+
+void Tamagochi::MessageNotEnoughPlayfilness(){
+    std::cout << name << " say: I can not do it, I need to play!" << std::endl << std::endl; // Питомец грустный.
+    ShowInfo();
+};
+
+void Tamagochi::MessageNotEnoughSatiety(){
+    std::cout << name << " say: I can not do it, I need to eat!" << std::endl << std::endl; // Питомец голодный.
+    ShowInfo();
+};
+
+void Tamagochi::MessageSuccess(){
+    std::cout << name << " say: I have done it!" << std::endl << std::endl; // Питомец смог выполнить действие
+    ShowInfo(); // Вывод информации о питомце.
 };
 
 
 int main() {
     Tamagochi pet; // Заводим нового питомца.
 
-    pet.GetName(); // Даём Имя.
+    pet.SetName(); // Даём Имя.
 
     std::string startAnswer; // Переменная для принятия ответа о ручном задании сытости и игривости.
 
@@ -181,22 +238,22 @@ int main() {
         std::cin >> choose;
         std::cout << std::endl;
         switch (choose) {
-            case 1:
-                pet.Stroke();
+            case Pet:
+                pet.Pet();
                 break;
-            case 2:
+            case Play:
                 pet.Play();
                 break;
-            case 3:
+            case Feed:
                 pet.Feed();
                 break;
-            case 4:
+            case Sleep:
                 pet.Sleep();
                 break;
-            case 5:
+            case Say:
                 pet.Say();
                 break;
-            case 0:
+            case Exit:
                 break;
             default:
                 std::cout << "You choose incorrect value. Try again! " << std::endl;
