@@ -30,11 +30,9 @@ class Tamagochi{
 
 public:
     // Конструктор по умолчанию устонавливает сытость и игривость на 100.
-    Tamagochi()
-    {
-        satiety = 100;
-        playfulness = 100;
-    }
+    Tamagochi (std::string type, std::string answer = "Who am I?", int maxPlayfulness = 100, int maxSatiety = 100, int addPlayfulnessForPet = 5,
+              int addPlayfulnessForPlay = 10, int subSatietyForPlay = -10, int addSatietyForFeed = 20, int subSatietyForSleep = -10,
+              int subPlayfulnessForSleep = -20);
     // Диструктор, в данном классе нет обращений к внешней памяти, поэтому очищать нечего.
     ~Tamagochi(){};
 
@@ -47,8 +45,16 @@ public:
     void Feed(); // Покормить (+20 к сытости).
     void Sleep(); // Отправить спать (-10 к сытости, -20 к игривости).
     void Say(); // Подать голос
+    int GetAddPlayfilnessForPet(){return ADD_PLAYFILNESS_FOR_PET;};
+    int GetAddPlayfilnessForPlay(){return ADD_PLAYFILNESS_FOR_PLAY;};
+    int GetSubSatietyForPlay(){return SUB_SATIETY_FOR_PLAY;};
+    int GetAddSatietyForFeed(){return ADD_SATIETY_FOR_FEED;};
+    int GetSubSatietyForSleep(){return SUB_SATIETY_FOR_SLEEP;};
+    int GetSubPlayfilnessForSleep(){return SUB_PLAYFILNESS_FOR_SLEEP;};
+
 
 private:
+    const std::string TYPE = "";
     //Pet
     const int ADD_PLAYFILNESS_FOR_PET = 5;
     //Play
@@ -60,8 +66,9 @@ private:
     const int SUB_SATIETY_FOR_SLEEP = -10;
     const int SUB_PLAYFILNESS_FOR_SLEEP = -20;
     //Say
-    const std::string answer = "Miau";
+    const std::string ANSWER = "Miau";
     //Name
+protected:
     std::string name; // Хранит имя питомца.
     //Parameters
     int playfulness;
@@ -169,7 +176,7 @@ void Tamagochi::Sleep(){
 };
 
 void Tamagochi::Say(){
-    std::cout << name << " say:\t" << answer << std::endl;
+    std::cout << TYPE << " " << name << " say:\t" << ANSWER << std::endl;
 };
 
 bool Tamagochi::Check(const int PARAMETER,const int SUB) {
@@ -183,23 +190,65 @@ bool Tamagochi::CheckMax(const int PARAMETR, const int MAX ){
 };
 
 void Tamagochi::MessageNotEnoughPlayfilness(){
-    std::cout << name << " say: I can not do it, I need to play!" << std::endl << std::endl; // Питомец грустный.
+    std::cout << TYPE << " " << name << " say: I can not do it, I need to play!" << std::endl << std::endl; // Питомец грустный.
     ShowInfo();
 };
 
 void Tamagochi::MessageNotEnoughSatiety(){
-    std::cout << name << " say: I can not do it, I need to eat!" << std::endl << std::endl; // Питомец голодный.
+    std::cout << TYPE << " " << name << " say: I can not do it, I need to eat!" << std::endl << std::endl; // Питомец голодный.
     ShowInfo();
 };
 
 void Tamagochi::MessageSuccess(){
-    std::cout << name << " say: I have done it!" << std::endl << std::endl; // Питомец смог выполнить действие
+    std::cout << TYPE << " " << name << " say: I have done it!" << std::endl << std::endl; // Питомец смог выполнить действие
     ShowInfo(); // Вывод информации о питомце.
+}
+
+Tamagochi::Tamagochi (std::string type, std::string answer, int maxPlayfulness, int maxSatiety, int addPlayfulnessForPet,
+                     int addPlayfulnessForPlay, int subSatietyForPlay, int addSatietyForFeed, int subSatietyForSleep,
+                     int subPlayfulnessForSleep)
+        :
+        TYPE(type),
+        ANSWER(answer),
+        MAX_PLAYFULNESS(maxPlayfulness),
+        MAX_SATIETY(maxSatiety),
+
+        ADD_PLAYFILNESS_FOR_PET(addPlayfulnessForPet),
+
+        ADD_PLAYFILNESS_FOR_PLAY(addPlayfulnessForPlay),
+        SUB_SATIETY_FOR_PLAY(subSatietyForPlay),
+
+        ADD_SATIETY_FOR_FEED(addSatietyForFeed),
+
+        SUB_SATIETY_FOR_SLEEP(subSatietyForSleep),
+        SUB_PLAYFILNESS_FOR_SLEEP(subPlayfulnessForSleep)
+
+{
+    satiety = MAX_SATIETY;
+    playfulness = MAX_PLAYFULNESS;
 };
 
 
+class Cat : public Tamagochi
+{
+public:
+    Cat() : Tamagochi("Cat","Miau!" ){};
+    ~Cat(){};
+};
+class Dog : public Tamagochi
+{
+public:
+    Dog() : Tamagochi("Dog","Gav! Gav!",120, 150, 10, 20, -10, 25, -20, -40){};
+    ~Dog(){};
+};
+class Parrot : public Tamagochi
+{
+public:
+    Parrot() : Tamagochi("Parrot", "Give me foood!", 80, 50,)
+};
 int main() {
-    Tamagochi pet; // Заводим нового питомца.
+
+    Cat pet;// Заводим нового питомца.
 
     pet.SetName(); // Даём Имя.
 
@@ -228,10 +277,10 @@ int main() {
     while (choose){
         std::cout << "MENU" << std::endl;
         std::cout << "You can: " << std::endl;
-        std::cout << "Stroke your pet (+5 playfulness) - enter 1" << std::endl;
-        std::cout << "Play with your pet (+10 playfulness, -10 satiety ) - enter 2" << std::endl;
-        std::cout << "Feed your pet (+20 satiety) - enter 3" << std::endl;
-        std::cout << "Let your pet sleep (-10 satiety, -20 playfulness) - enter 4" << std::endl;
+        std::cout << "Stroke your pet (" << pet.GetAddPlayfilnessForPet() << " playfulness) - enter 1" << std::endl;
+        std::cout << "Play with your pet (" << pet.GetAddPlayfilnessForPlay() << " playfulness, " << pet.GetSubSatietyForPlay() << " satiety ) - enter 2" << std::endl;
+        std::cout << "Feed your pet (" << pet.GetAddSatietyForFeed() << " satiety) - enter 3" << std::endl;
+        std::cout << "Let your pet sleep (" << pet.GetSubSatietyForSleep() << " satiety, " << pet.GetSubPlayfilnessForSleep() << " playfulness) - enter 4" << std::endl;
         std::cout << "Ask your pet to vote - enter 5" << std::endl;
         std::cout << "Exit - enter 0" << std::endl;
         std::cout << "Enter your answer: " << std::endl;
@@ -259,4 +308,4 @@ int main() {
                 std::cout << "You choose incorrect value. Try again! " << std::endl;
         }
     }
-}
+     }
