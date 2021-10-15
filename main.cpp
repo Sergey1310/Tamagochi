@@ -23,13 +23,21 @@ enum Actions
     Sleep,
     Say,
         };
+enum Pets
+{
+    Cat,
+    Dog,
+    Parrot
+};
 
 
 
 class Tamagochi{
 
 public:
-    // Конструктор по умолчанию устонавливает сытость и игривость на 100.
+    // Конструктор по умолчанию
+    Tamagochi(){};
+   // Конструктор для наследования - задаёт значения для констант
     Tamagochi (std::string type, std::string answer = "Who am I?", int maxPlayfulness = 100, int maxSatiety = 100, int addPlayfulnessForPet = 5,
               int addPlayfulnessForPlay = 10, int subSatietyForPlay = -10, int addSatietyForFeed = 20, int subSatietyForSleep = -10,
               int subPlayfulnessForSleep = -20);
@@ -45,6 +53,7 @@ public:
     void Feed(); // Покормить (+20 к сытости).
     void Sleep(); // Отправить спать (-10 к сытости, -20 к игривости).
     void Say(); // Подать голос
+    // Геттеры для констант
     int GetAddPlayfilnessForPet(){return ADD_PLAYFILNESS_FOR_PET;};
     int GetAddPlayfilnessForPlay(){return ADD_PLAYFILNESS_FOR_PLAY;};
     int GetSubSatietyForPlay(){return SUB_SATIETY_FOR_PLAY;};
@@ -54,6 +63,7 @@ public:
 
 
 private:
+    // Тип питомца
     const std::string TYPE = "";
     //Pet
     const int ADD_PLAYFILNESS_FOR_PET = 5;
@@ -95,7 +105,7 @@ void Tamagochi::SetName(){
 void Tamagochi::SetSatiety(){
     while (true)
     {
-        std::cout << "Now enter starting value satiety for your pet (0 - 100): ";
+        std::cout << "Now enter starting value satiety for your pet (0 - " << MAX_SATIETY <<"): ";
         std::cin >> satiety;
         if (CheckMax(satiety,MAX_SATIETY))
         {
@@ -113,7 +123,7 @@ void Tamagochi::SetPlayfulness(){
     while (true)
     {
 
-        std::cout << "Now enter starting value playfulness for your pet (0-100): ";
+        std::cout << "Now enter starting value playfulness for your pet (0-" << MAX_PLAYFULNESS << "): ";
         std::cin >> playfulness;
         if (CheckMax(playfulness,MAX_PLAYFULNESS))
         {
@@ -128,7 +138,7 @@ void Tamagochi::SetPlayfulness(){
 };
 
 void Tamagochi::ShowInfo(){
-    std::cout << "The pet: " << name << std::endl;
+    std::cout << "The pet: " << TYPE << " " << name << std::endl;
     std::cout << "Satiety: " << satiety << "\tPlayfulness: " << playfulness <<std::endl;
 };
 
@@ -176,7 +186,7 @@ void Tamagochi::Sleep(){
 };
 
 void Tamagochi::Say(){
-    std::cout << TYPE << " " << name << " say:\t" << ANSWER << std::endl;
+    std::cout << TYPE << " " << name << " say:\t" << ANSWER << std::endl << std::endl;
 };
 
 bool Tamagochi::Check(const int PARAMETER,const int SUB) {
@@ -204,10 +214,11 @@ void Tamagochi::MessageSuccess(){
     ShowInfo(); // Вывод информации о питомце.
 }
 
+
 Tamagochi::Tamagochi (std::string type, std::string answer, int maxPlayfulness, int maxSatiety, int addPlayfulnessForPet,
                      int addPlayfulnessForPlay, int subSatietyForPlay, int addSatietyForFeed, int subSatietyForSleep,
                      int subPlayfulnessForSleep)
-        :
+        : // Определяем константы полученными значениями
         TYPE(type),
         ANSWER(answer),
         MAX_PLAYFULNESS(maxPlayfulness),
@@ -229,28 +240,64 @@ Tamagochi::Tamagochi (std::string type, std::string answer, int maxPlayfulness, 
 };
 
 
-class Cat : public Tamagochi
+// Питомцы
+class CatPet : public Tamagochi
 {
 public:
-    Cat() : Tamagochi("Cat","Miau!" ){};
-    ~Cat(){};
+    //Вызываем коструктор базового класса Tamagochi и передаём в него значения констант для данного класса.
+    CatPet() : Tamagochi("Cat","Miau!" ){};
+    ~CatPet(){};
+    friend void Tamagochi::Pet();
 };
-class Dog : public Tamagochi
+class DogPet : public Tamagochi
 {
 public:
-    Dog() : Tamagochi("Dog","Gav! Gav!",120, 150, 10, 20, -10, 25, -20, -40){};
-    ~Dog(){};
+    DogPet() : Tamagochi("Dog","Gav! Gav!",120, 150, 10, 20, -10, 25, -20, -40){};
+    ~DogPet(){};
 };
-class Parrot : public Tamagochi
+class ParrotPet : public Tamagochi
 {
 public:
-    Parrot() : Tamagochi("Parrot", "Give me foood!", 80, 50,)
+    ParrotPet() : Tamagochi("Parrot","Give me food!",80, 50, 5, 10, -10, 15, -10, -15){};
+    ~ParrotPet(){};
 };
+
+
 int main() {
 
-    Cat pet;// Заводим нового питомца.
 
-    pet.SetName(); // Даём Имя.
+
+    Tamagochi *pet; //Создаём ссылку на объект тамагочи
+    int answer; // Переменная для выбора типа питомца
+    for (bool check = true;check;) { // Цикл отвечающий за правильный выбор питомца из данных вариантов
+
+        std::cout << "Chose type of your pet: " << std::endl;
+        std::cout << "Cat - " << Cat << std::endl;
+        std::cout << "Dog - " << Dog << std::endl;
+        std::cout << "Parrot - " << Parrot << std::endl;
+        std::cout << "Your answer : ";
+        std::cin >> answer;
+        std::cout << std::endl;
+        switch (answer)
+        {
+            case Cat: pet = new CatPet; // Создаём объект типа Кот и кладём ссылку на него в переменную pet
+            check = false; // Меняем значения контрольной переменной на false чтобы выйти из цикла
+            break; // Выходим из оператора ветвления switch
+
+            case Dog: pet = new DogPet;
+            check = false;
+            break;
+
+            case Parrot: new ParrotPet;
+            check = false;
+            break;
+
+            default: check = true; // Если введёный ответ не соответствует предложенным вариантам - повторить
+            std::cout << "Incorrect answer, try again! " << std::endl;
+        }
+    }
+
+    pet->SetName(); // Даём Имя.
 
     std::string startAnswer; // Переменная для принятия ответа о ручном задании сытости и игривости.
 
@@ -260,8 +307,8 @@ int main() {
         std::cin >> startAnswer;
         std::cout << std::endl;
         if ((startAnswer == "Yes")){
-            pet.SetSatiety();
-            pet.SetPlayfulness();
+            pet->SetSatiety();
+            pet->SetPlayfulness();
             break;
         } else if ((startAnswer == "No")||(startAnswer == "no")||(startAnswer == "n")){
             break;}
@@ -270,17 +317,17 @@ int main() {
     // Если ответ положительный - пользователь вводит эти значения.
     // Если ответ отрицательный - применяется максимальное значение.
     // Если ответ не корректный - повтор.
-    pet.ShowInfo(); // Вывод информации о питомце.
+    pet->ShowInfo(); // Вывод информации о питомце.
 
     int choose = 1; // Переменная - выбора вариантов действий и выхода из цикла.
 
     while (choose){
         std::cout << "MENU" << std::endl;
         std::cout << "You can: " << std::endl;
-        std::cout << "Stroke your pet (" << pet.GetAddPlayfilnessForPet() << " playfulness) - enter 1" << std::endl;
-        std::cout << "Play with your pet (" << pet.GetAddPlayfilnessForPlay() << " playfulness, " << pet.GetSubSatietyForPlay() << " satiety ) - enter 2" << std::endl;
-        std::cout << "Feed your pet (" << pet.GetAddSatietyForFeed() << " satiety) - enter 3" << std::endl;
-        std::cout << "Let your pet sleep (" << pet.GetSubSatietyForSleep() << " satiety, " << pet.GetSubPlayfilnessForSleep() << " playfulness) - enter 4" << std::endl;
+        std::cout << "Stroke your pet (" << pet->GetAddPlayfilnessForPet() << " playfulness) - enter 1" << std::endl;
+        std::cout << "Play with your pet (" << pet->GetAddPlayfilnessForPlay() << " playfulness, " << pet->GetSubSatietyForPlay() << " satiety ) - enter 2" << std::endl;
+        std::cout << "Feed your pet (" << pet->GetAddSatietyForFeed() << " satiety) - enter 3" << std::endl;
+        std::cout << "Let your pet sleep (" << pet->GetSubSatietyForSleep() << " satiety, " << pet->GetSubPlayfilnessForSleep() << " playfulness) - enter 4" << std::endl;
         std::cout << "Ask your pet to vote - enter 5" << std::endl;
         std::cout << "Exit - enter 0" << std::endl;
         std::cout << "Enter your answer: " << std::endl;
@@ -288,19 +335,19 @@ int main() {
         std::cout << std::endl;
         switch (choose) {
             case Pet:
-                pet.Pet();
+                pet->Pet();
                 break;
             case Play:
-                pet.Play();
+                pet->Play();
                 break;
             case Feed:
-                pet.Feed();
+                pet->Feed();
                 break;
             case Sleep:
-                pet.Sleep();
+                pet->Sleep();
                 break;
             case Say:
-                pet.Say();
+                pet->Say();
                 break;
             case Exit:
                 break;
@@ -308,4 +355,5 @@ int main() {
                 std::cout << "You choose incorrect value. Try again! " << std::endl;
         }
     }
+    delete pet;
      }
